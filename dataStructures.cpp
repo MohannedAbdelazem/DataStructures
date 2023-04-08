@@ -1,6 +1,21 @@
 #include <iostream>
 using namespace std;
-//moha test drive
+
+template <typename T>
+class Vector{
+    private:
+    T *arr;
+    int capacity;
+    int size;
+    public:
+    Vector(): capacity(10),size=0;
+    {
+        arr = new T[10];
+    }
+
+};
+
+
 template <typename T>
 class linkedList{
     private:
