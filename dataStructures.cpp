@@ -2,17 +2,236 @@
 using namespace std;
 
 template <typename T>
-class Vector{
-    private:
-    T *arr;
-    int capacity;
+class AMvector
+{
+private:
+    typedef T *iterator;
+    iterator iteration;
     int size;
-    public:
-    Vector(): capacity(10),size=0;
+    int capacity;
+    T *ptr;
+
+public:
+    int GetSize()
     {
-        arr = new T[10];
+        return size;
+    }
+    int GetCapacity()
+    {
+        return capacity;
+    }
+    iterator begin()
+    {
+        return ptr;
+    }
+    iterator end()
+    {
+        return (ptr + size - 2);
+    }
+    // First constructor
+    AMvector(int n = 0)
+    {
+        size = 0;
+        this->capacity = 10;
+        if (this->capacity < n)
+        {
+            capacity = n;
+        }
+        ptr = new T[capacity];
+        iteration = ptr;
+    }
+    // Second Constructor
+    AMvector(T *elements, int n)
+    {
+        size = n;
+        capacity = n;
+        ptr = elements;
+        ptr = new T[capacity];
+        for (int i = 0; i < size; i++)
+        {
+            ptr[i] = elements[i];
+        }
+        iteration = ptr;
+    }
+    AMvector(AMvector &VectorCpy)
+    {
+        size = VectorCpy.size;
+        capacity = VectorCpy.capacity;
+        ptr = new T[capacity];
+        for (int i = 0; i < capacity; i++)
+        {
+            ptr[i] = VectorCpy[i];
+        }
+    }
+    AMvector &operator=(AMvector &VectorCpy)
+    {
+        size = VectorCpy.size;
+        capacity = VectorCpy.capacity;
+        ptr = new T[capacity];
+        for (int i = 0; i < capacity; i++)
+        {
+            ptr[i] = VectorCpy[i];
+        }
+        return *this;
+    }
+    AMvector &operator=(const AMvector &&VectorCpy)
+    {
+        size = VectorCpy.GetSize();
+        capacity = VectorCpy.GetCapacity();
+        for (int i = 0; i < capacity; i++)
+        {
+            ptr[i] = VectorCpy[i];
+        }
+    }
+    T &operator[](int index)
+    {
+        try
+        {
+            if (index >= capacity)
+            {
+                throw capacity;
+            }
+            return ptr[index];
+        }
+        catch (int e)
+        {
+            cout << e << " Is the max capacity" << endl;
+            exit(3);
+            return ptr[0];
+        }
     }
 
+    int push_back(T element)
+    {
+        if (size == capacity)
+        {
+            T *temp = new T[2 * capacity];
+            for (int i = 0; i < capacity; i++)
+            {
+                temp[i] = ptr[i];
+            }
+            delete[] ptr;
+            capacity *= 2;
+            ptr = temp;
+            iteration = ptr;
+        }
+        ptr[size] = element;
+        size++;
+        return size;
+    }
+    T pop_back()
+    {
+        size--;
+        return ptr[size];
+    }
+    void erase(T element)
+    {
+        size--;
+        T *temp = new T[capacity];
+        for (int i = 0; i < capacity; i++)
+        {
+            if (&(ptr[i]) != NULL)
+            {
+                temp[i] = ptr[i];
+            }
+        }
+        delete[] ptr;
+        ptr = temp;
+        iteration = ptr;
+    }
+    // deletes from the element after start to the element after the ending
+    void erase(T start, T ending)
+    {
+        while (start != ending + 1)
+        {
+            erase(start);
+            start++;
+        }
+    }
+    void clear()
+    {
+        size = 0;
+        // for (int i = 0; i < capacity; i++)
+        // {
+        //     &(ptr[i]) = NULL;
+        // }
+    }
+    bool operator==(const AMvector<T> &other)
+    {
+        if (size != other.size)
+        {
+            return false;
+        }
+        for (int i = 0; i < size; i++)
+        {
+            if (ptr[i] != other.ptr[i])
+                return false;
+        }
+        return true;
+    }
+    bool operator<(const AMvector<T> &other)
+    {
+        if (size != other.size)
+        {
+            return false;
+        }
+        for (int i = 0; i < size; i++)
+        {
+            if (ptr[i] >= other.ptr[i])
+                return false;
+        }
+        return true;
+    }
+    void resize(int NewCapacity)
+    {
+        // Check it out later or after abdo checks it out
+        T *temp = new T[NewCapacity];
+        for (int i = 0; i < capacity; i++)
+        {
+            if (&(ptr[i]) != NULL)
+            {
+                temp[i] = ptr[i];
+            }
+        }
+        capacity = NewCapacity;
+        delete[] ptr;
+        ptr = temp;
+        iteration = ptr;
+        if (capacity < size)
+        {
+            size = capacity;
+        }
+    }
+    bool empty()
+    {
+        if (size == 0)
+        {
+            return true;
+        }
+        return false;
+    }
+    friend ostream &operator<<(ostream &out, AMvector<T> &vec)
+    {
+        for (int i = 0; i < vec.GetSize(); i++)
+        {
+            out << vec[i] << " ";
+        }
+        out << endl;
+        return out;
+    }
+    void operator++()
+    {
+        iteration++;
+    }
+
+    T operator*()
+    {
+        return *iteration;
+    }
+    void operator+(int index)
+    {
+        iteration += index;
+    }
 };
 
 
