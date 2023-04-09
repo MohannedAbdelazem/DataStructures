@@ -248,7 +248,7 @@ class linkedList{
     linkedList(){
         head = NULL;
     }
-    void insertFirst(T element){
+    void insertAtHead(T element){
         Node *newNode = new Node;
         newNode->data = element;
         if(head == NULL){
@@ -262,12 +262,20 @@ class linkedList{
     }
     void print(){
         Node *ptr = head;
-        while (ptr != NULL)
-        {
-            cout << ptr->data;
-            ptr = ptr->next;
+        if(ptr == NULL){
+            cout << "The linked list is empty" << endl;
         }
+        else{
+            while (ptr != NULL)
+            {
+                cout << ptr->data << endl;
+                ptr = ptr->next;
+            }  
         
+        }
+    }
+    bool isEmpty(){
+        return (head == NULL);
     }
     int count(){
         int count = 0;
@@ -278,7 +286,7 @@ class linkedList{
         }
         return count;
     }
-    bool isFound(T element){
+    bool isExist(T element){
         Node *ptr = head;
         bool found = false;
         while(ptr != NULL){
@@ -290,50 +298,146 @@ class linkedList{
         }
         return found;
     }
-    void insertBefore(T Item, T replacer){
-        Node *ptr = head;
-        while(ptr != NULL){
-            if(ptr->next->data == Item){
-                Node *newNode = new Node;
-                newNode->data = replacer;
-                newNode->next = ptr->next;
-                ptr->next = newNode;
-                break;
+    // void insertBefore(T Item, T replacer){
+    //     Node *ptr = head;
+    //     while(ptr != NULL){
+    //         if(ptr->next->data == Item){
+    //             Node *newNode = new Node;
+    //             newNode->data = replacer;
+    //             newNode->next = ptr->next;
+    //             ptr->next = newNode;
+    //             break;
+    //         }
+    //         ptr = ptr->next;
+    //     }
+    // }
+    
+    void insertAtTail(T element){
+        Node *node = new Node;
+        node->data = element;
+        node->next = NULL;
+        if(isEmpty()){
+            head = node;
+        }
+        else{
+            Node *ptr = head;
+            while(ptr->next != NULL){
+                ptr = ptr->next;
             }
-            ptr = ptr->next;
+            ptr->next = node;
         }
     }
-    void insertAfter(T item, T replacer){
-        Node *ptr = head;
-        while(ptr != NULL){
-            if(ptr->data == item){
-                Node *newNode = new Node;
-                newNode->data = replacer;
-                newNode->next = ptr->next;
-                ptr->next = newNode;
-                break;
-            }
-            ptr = ptr->next;
+    void clear(){
+        head = NULL;
+    }
+    void removeAtHead(){
+        if(isEmpty()){
+            cout << "The list is already empty" << endl;
+        }
+        else{
+            Node *ptr = head;
+            head = head->next;
+            delete ptr;
         }
     }
-    void append(T Element){
+    void removeAtTail(){
+        if(isEmpty()){
+            cout << "The list is already empty" << endl;
+        }
+        else{
+            Node *ptr = head;
+            while(ptr->next->next != NULL){
+                ptr = ptr->next;
+            }
+            ptr->next = NULL;
+        }
+    }
+    void insertAt(int index, T element){
+        // Node *node = new Node;
+        // node->data = element;
         Node *ptr = head;
-        while(ptr->next != NULL)
-            ptr = ptr->next;
-        Node *newNode = new Node;
-        newNode->data = Element;
-        newNode->next = NULL;
-        ptr->next = newNode;
+        if(index == 0){
+            insertAtHead(element);
+        }
+        else if(index> (count())){
+            cout << "Out of range" << endl;
+        }
+        else if(index == (count())){
+            insertAtTail(element);
+        }
+        else{
+            for(int i = 0;i<index-1;i++){
+               ptr = ptr->next;
+            }
+            Node *node = new Node;
+            node->data = element;
+            node->next = ptr->next;
+            ptr->next = node;
+        }
+    }
+    T retreiveAt(int index){
+        //The first element will be returned by default if the element was not found
+        T result = head->data;
+        if(index > (count()-1)){
+            cout << "Out of range.... returning head element by default" << endl;
+        }
+        else{
+            Node *ptr = head;
+            for(int i = 0;i<index;i++){
+                ptr = ptr->next;
+            }
+            result = ptr->data;
+        }
+        return result;
+    }
+    void replaceAt(T replacer, int index){
+        if(index > (count()-1)){
+            cout << "Out of range" << endl;
+        }
+        else{
+            Node *ptr = head;
+            for(int i = 0;i<index;i++){
+                ptr = ptr->next;
+            }
+            ptr->data = replacer;
+        }
+    }
+    bool isItemAtEqual(T element, int index){
+        return (retreiveAt(index) == element);
+    }
+    void swap(int FirstIndex, int SecondIndex){
+        if(FirstIndex > (count()-1)|| SecondIndex > (count()-1)){
+            cout << "Can't swap..... elements are out of range" << endl;
+        }
+        else{
+            Node *ptr1 = head;
+            for(int i = 0;i<FirstIndex;i++){
+                ptr1 = ptr1->next;
+            }
+            Node *ptr2 = head;
+            for(int i = 0;i<SecondIndex;i++){
+                ptr2 = ptr2->next;
+            }
+            Node *tmpPtr = ptr1;
+            ptr1 = ptr2;
+            ptr2 = tmpPtr;
+        }
     }
 };
+
+class DoubleLinkedList{
+
+};
+
+
 int main(){
-    linkedList<int> l1;
-    l1.insertFirst(1);
-    l1.append(2);
-    l1.append(3);
-    l1.append(4);
-    l1.append(6);
-    l1.insertBefore(6, 5);
-    l1.print();
+    linkedList<double> x;
+    x.insertAtHead(1);
+    x.insertAt(1, 2);
+    x.insertAtTail(3);
+    x.insertAtTail(5);
+    x.replaceAt(4, 3);
+    x.swap(1, 3);
+    x.print();
     return 0;
-}
+} 
