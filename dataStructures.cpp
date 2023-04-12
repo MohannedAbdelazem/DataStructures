@@ -665,23 +665,229 @@ class DoubleLinkedList{
     }
 };
 
+template <typename T>
 class CircularLinkedList{
+    private:
+    int length;
+    struct Node{
+        T data;
+        Node *Next;
+    };
+    public:
+    Node *head;
+    Node *tail;
+    CircularLinkedList():length(0)
+    {
+        head = tail = NULL;
+    }
+    bool isEmpty(){
+        return (length == 0);
+    }
+    void insertAtHead(T element){
+        Node *node = new Node;
+        node->data = element;
+        if(isEmpty()){
+            head = tail = node;
+            head->Next = tail;
+            tail->Next = head;
+        }
+        else{
+            node->Next = tail->Next;
+            tail->Next = node;
+            head = node;
+        }
+        length++;
+    }
+    void insertAtEnd(T element){
+        if(isEmpty()){
+            insertAtHead(element);
+            return;
+        }
+        else{
+            Node *node = new Node;
+            node->data = element;
+            node->Next = tail->Next;
+            tail->Next = node;
+            tail = node;
+        }
+        length++;
+    }
+    void print(){
+        if(length == 0){
+            cout << "Can't print .... list is empty" << endl;
+
+        }
+        else{
+            Node *ptr = head;
+            int i = 0;
+            while(i++ != length){
+                cout << ptr->data << endl;
+                ptr = ptr->Next;
+            }
+        }
+    }
+    void insertAt(int index, T element){
+        // Node *node = new Node;
+        // node->data = element;
+        Node *ptr = head;
+        if(index == 0){
+            insertAtHead(element);
+            return;
+        }
+        else if(index> (length)){
+            cout << "Out of range" << endl;
+            return;
+        }
+        else if(index == (length)){
+            insertAtEnd(element);
+            return;
+        }
+        else{
+            for(int i = 0;i<index-1;i++){
+               ptr = ptr->Next;
+            }
+            Node *node = new Node;
+            node->data = element;
+            node->Next = ptr->Next;
+            ptr->Next = node;
+        }
+        length++;
+    }
+    void removeAtHead(){
+        if(isEmpty()){
+            cout << "Can't remove items....... List already empty" << endl;
+        }
+        else{
+            Node *deleted = head;
+            tail->Next = deleted->Next;
+            head = tail->Next;
+            delete deleted;
+            length--;
+        }
+    }
+    void removeAtEnd(){
+        if(isEmpty()){
+            cout << "Can't remove items....... List already empty" << endl;
+        }
+        else{
+            Node *ptr = head;
+            while(ptr->Next != tail){
+                ptr = ptr->Next;
+            }
+            Node *deleted = tail;
+            ptr->Next = tail->Next;
+            tail = ptr;
+            delete deleted;
+            length--;
+        }
+    }
+    void removeAt (int index){
+        if(isEmpty()){
+            cout << "Can't remove ..... Linked list is empty" << endl;
+        }
+        else if(index >= length){
+            cout << "Can't remove ..... index is out of range" << endl;
+        }
+        else if(index == 0){
+            removeAtHead();
+        }
+        else if(index == (length - 1)){
+            removeAtEnd();
+        }
+        else{
+            Node *ptr = head;
+            for(int i = 0;i<index-1;i++){
+                ptr = ptr->Next;
+            }
+            Node *deleted = ptr->Next;
+            ptr->Next = deleted->Next;
+            delete deleted;
+            length--;
+        }
+    }
+    int circularLinkedListSize(){
+        return length;
+    }
+    T retreiveAt(int index){
+        //The first element will be returned by default if the element was not found
+        T result = head->data;
+        if(index > (length-1)){
+            cout << "Out of range.... returning head element by default" << endl;
+        }
+        else{
+            Node *ptr = head;
+            for(int i = 0;i<index;i++){
+                ptr = ptr->Next;
+            }
+            result = ptr->data;
+        }
+        return result;
+    }
+    void replaceAt(T replacer, int index){
+        if(index > (length - 1)){
+            cout << "Out of range" << endl;
+        }
+        else{
+            Node *ptr = head;
+            for(int i = 0;i<index;i++){
+                ptr = ptr->Next;
+            }
+            ptr->data = replacer;
+        }
+    }
+    bool isExist(T element){
+        Node *ptr = head;
+        bool found = false;
+        int i = 0;
+        while(i++ != (length)){
+            if(element == ptr->data){
+                found = true;
+                break;
+            }
+            ptr = ptr->Next;
+        }
+        return found;
+    }
+    bool isItemAtEqual(T element, int index){
+        return (retreiveAt(index) == element);
+    }
+    void swap(int FirstIndex, int SecondIndex){
+        if(FirstIndex > (length-1)|| SecondIndex > (length-1)){
+            cout << "Can't swap..... elements are out of range" << endl;
+        }
+        else{
+            Node *ptr1 = head;
+            for(int i = 0;i<FirstIndex;i++){
+                ptr1 = ptr1->Next;
+            }
+            Node *ptr2 = head;
+            for(int i = 0;i<SecondIndex;i++){
+                ptr2 = ptr2->Next;
+            }
+            Node *tmpPtr = ptr1;
+            ptr1 = ptr2;
+            ptr2 = tmpPtr;
+        }
+    }
+    void clear(){
+        head = NULL;
+        tail = NULL;
+        length = 0;
+    }
 
 };
 
 int main(){
-    DoubleLinkedList<int> x;
+    CircularLinkedList<int> x;
     x.insertAt(0, 0);
     x.insertAt(1, 1);
     x.insertAt(2, 2);
+    x.insertAt(3, 4);
     x.insertAt(3, 3);
-    x.removeAtHead();
-    x.removeAtTail();
-    cout << endl << "----------------" << endl;
-    cout << x.head->data;
-    cout << endl << "----------------" << endl;
-    cout << x.tail->data;
-    cout << endl << "----------------" << endl;
+    x.insertAt(5, 6);
+    x.replaceAt(5, 5);
+    x.insertAt(6, 36);
+    x.print();
 
     return 0;
 } 
