@@ -248,7 +248,7 @@ class linkedList{
     linkedList(){
         head = NULL;
     }
-    void insertAtHead(T element){
+    virtual void insertAtHead(T element){
         Node *newNode = new Node;
         newNode->data = element;
         if(head == NULL){
@@ -423,21 +423,265 @@ class linkedList{
             ptr2 = tmpPtr;
         }
     }
+    void removeAt (int index){
+        if(isEmpty()){
+            cout << "Can't remove ..... Linked list is empty" << endl;
+        }
+        else if(index >= count()){
+            cout << "Can't remove ..... index is out of range" << endl;
+        }
+        else if(index == 0){
+            removeAtHead();
+        }
+        else if(index == (count()-1)){
+            removeAtTail();
+        }
+        else{
+            Node *ptr = head;
+            for(int i = 0;i<index-1;i++){
+                ptr = ptr->next;
+            }
+            Node *deleted = ptr->next;
+            ptr->next = deleted->next;
+            delete deleted;
+        }
+    }
 };
 
+//Double linked list
+template <typename T>
 class DoubleLinkedList{
+    private:
+    struct Node{
+        T data;
+        Node *previous;
+        Node *Next;
+    };
+    public:
+    Node *head;
+    Node *tail;
+    DoubleLinkedList(){
+        head = NULL;
+        tail = NULL;
+    }
+    int count(){
+        int count = 0;
+        Node *tmp = head;
+        while(tmp != NULL){
+            count++;
+            tmp = tmp->Next;
+        }
+        return count;
+    }
+    bool isEmpty(){
+        return (head == NULL);
+    }
+    void insertAtHead(T element){
+        Node *node = new Node;
+        node->data = element;
+        node->previous = NULL;
+        if(isEmpty()){
+            node->Next = NULL;
+            head = node;
+            tail = node;
+        }
+        else{
+            node->Next = head;
+            head->previous = node;
+            head = node;
+        }
+    }
+    void forwardTraversal(){
+        Node *ptr = head;
+        while(ptr != NULL){
+            cout << ptr->data << endl;
+            ptr = ptr->Next;
+        }
+    }
+    void backwardTraversal(){
+        Node *ptr = tail;
+        while(ptr != NULL){
+            cout << ptr->data << endl;
+            ptr = ptr->previous;
+        }
 
+    }
+    void insertAtTail(T element){
+        Node *node = new Node;
+        node->data = element;
+        node->Next = NULL;
+        if(isEmpty()){
+            head = node;
+            node->previous = NULL;
+        }
+        else{
+            Node *ptr = head;
+            while(ptr->Next != NULL){
+                ptr = ptr->Next;
+            }
+            ptr->Next = node;
+            node->previous = ptr;
+        }
+        tail = node;
+    }
+    void insertAt(int index, T element){
+        // Node *node = new Node;
+        // node->data = element;
+        Node *ptr = head;
+        if(index == 0){
+            insertAtHead(element);
+        }
+        else if(index> (count())){
+            cout << "Out of range" << endl;
+        }
+        else if(index == (count())){
+            insertAtTail(element);
+        }
+        else{
+            for(int i = 0;i<index-1;i++){
+               ptr = ptr->Next;
+            }
+            Node *node = new Node;
+            node->data = element;
+            node->Next = ptr->Next;
+            Node *prev = ptr->Next;
+            prev->previous = node;
+            ptr->Next = node;
+            node->previous = ptr;
+        }
+    }
+    void clear(){
+        head = NULL;
+        tail = NULL;
+    }
+    int doubleLinkedListSize(){
+        return count();
+    }
+    T retreiveAt(int index){
+        //The first element will be returned by default if the element was not found
+        T result = head->data;
+        if(index > (count()-1)){
+            cout << "Out of range.... returning head element by default" << endl;
+        }
+        else{
+            Node *ptr = head;
+            for(int i = 0;i<index;i++){
+                ptr = ptr->Next;
+            }
+            result = ptr->data;
+        }
+        return result;
+    }
+    bool isItemAtEqual(T element, int index){
+        return (retreiveAt(index) == element);
+    }
+    void replaceAt(T replacer, int index){
+        if(index > (count()-1)){
+            cout << "Out of range" << endl;
+        }
+        else{
+            Node *ptr = head;
+            for(int i = 0;i<index;i++){
+                ptr = ptr->Next;
+            }
+            ptr->data = replacer;
+        }
+    }
+    bool isExist(T element){
+        Node *ptr = head;
+        bool found = false;
+        while(ptr != NULL){
+            if(element == ptr->data){
+                found = true;
+                break;
+            }
+            ptr = ptr->Next;
+        }
+        return found;
+    }
+    void swap(int FirstIndex, int SecondIndex){
+        if(FirstIndex > (count()-1)|| SecondIndex > (count()-1)){
+            cout << "Can't swap..... elements are out of range" << endl;
+        }
+        else{
+            Node *ptr1 = head;
+            for(int i = 0;i<FirstIndex;i++){
+                ptr1 = ptr1->Next;
+            }
+            Node *ptr2 = head;
+            for(int i = 0;i<SecondIndex;i++){
+                ptr2 = ptr2->Next;
+            }
+            Node *tmpPtr = ptr1;
+            ptr1 = ptr2;
+            ptr2 = tmpPtr;
+        }
+    }
+    void removeAtHead(){
+        if(isEmpty()){
+            cout << "The list is already empty" << endl;
+        }
+        else{
+            Node *ptr = head;
+            head = head->Next;
+            head->previous = NULL;
+            delete ptr;
+        }
+    }
+    void removeAtTail(){
+        if(isEmpty()){
+            cout << "The list is already empty" << endl;
+        }
+        else{
+            tail = tail->previous;
+            tail->Next = NULL;
+        }
+    }
+
+    void removeAt (int index){
+        if(isEmpty()){
+            cout << "Can't remove ..... Linked list is empty" << endl;
+        }
+        else if(index >= count()){
+            cout << "Can't remove ..... index is out of range" << endl;
+        }
+        else if(index == 0){
+            removeAtHead();
+        }
+        else if(index == (count()-1)){
+            removeAtTail();
+        }
+        else{
+            Node *ptr = head;
+            for(int i = 0;i<index-1;i++){
+                ptr = ptr->Next;
+            }
+            Node *deleted = ptr->Next;
+            Node *nptr = deleted->Next;
+            ptr->Next = nptr;
+            nptr->previous = ptr;
+            delete deleted;
+        }
+    }
 };
 
+class CircularLinkedList{
+
+};
 
 int main(){
-    linkedList<double> x;
-    x.insertAtHead(1);
-    x.insertAt(1, 2);
-    x.insertAtTail(3);
-    x.insertAtTail(5);
-    x.replaceAt(4, 3);
-    x.swap(1, 3);
-    x.print();
+    DoubleLinkedList<int> x;
+    x.insertAt(0, 0);
+    x.insertAt(1, 1);
+    x.insertAt(2, 2);
+    x.insertAt(3, 3);
+    x.removeAtHead();
+    x.removeAtTail();
+    cout << endl << "----------------" << endl;
+    cout << x.head->data;
+    cout << endl << "----------------" << endl;
+    cout << x.tail->data;
+    cout << endl << "----------------" << endl;
+
     return 0;
 } 
