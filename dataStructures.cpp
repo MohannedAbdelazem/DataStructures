@@ -876,18 +876,110 @@ class CircularLinkedList{
     }
 
 };
+template <typename T>
+class stack{
+    private:
+    T arr[100];
+    int top;
+    public:
+    stack(): top(-1){}
+    void push(T element){
+        if(top == 99){
+            cout << "Can't push anymore elments.... Stack is full" << endl;
+        }
+        else{
+            top++;
+            arr[top] = element;
+        }
+    }
+    bool isEmpty(){
+        return (top == -1);
+    }
+    T pop(){
+        if(isEmpty()){
+            cout << "Can't pop..... stack is empty" << endl;
+            return -1;
+        }
+        else{
+            return arr[top--];
+        }
+    }
+    T Top(){
+        return arr[top];
+    }
+    int stackSize(){
+        return (top+1);
+    }
+    void clear(){
+        top = -1;
+    }
+    void print(){
+        if(isEmpty()){
+            cout << "Can't print.... stack is empty" << endl;
+        }
+        else{
+            for(int i = top;i>-1;i--){
+                cout << arr[i] << endl;
+            }
+        }
+    }
+};
+
+template <class T>
+class Queue{
+    private:
+    int front;
+    int rear;
+    T arr[100];
+    int length;
+    public:
+    Queue(){
+        front = 0;
+        rear = 99;
+        length = 0;
+    }
+    bool isEmpty(){
+        return (length == 0);
+    }
+    void enqueue(T element){
+        if(length == 100){
+            cout << "Can't add elements... Queue is full" << endl;
+        }
+        else{
+            rear = (rear+1)%100;
+            arr[rear] = element;
+            length++;
+        }
+    }
+    T dequeue(){
+        if(isEmpty()){
+            cout << "Can't remove items..... queue is empty" << endl;
+            return -1;
+        }
+        else{
+            T element = arr[front];
+            front = (front+1)%100;
+            length--;
+            return element;
+        }
+    }
+    T first(){
+        return arr[front];
+    }
+    void print(){
+        int i;
+        for(i = front;i != rear;i=(i+1)%100){
+            cout << arr[i] << endl;
+        }
+        cout << arr[i] << endl;
+    }
+    int queueSize(){
+        return length;
+    }
+
+};
 
 int main(){
-    CircularLinkedList<int> x;
-    x.insertAt(0, 0);
-    x.insertAt(1, 1);
-    x.insertAt(2, 2);
-    x.insertAt(3, 4);
-    x.insertAt(3, 3);
-    x.insertAt(5, 6);
-    x.replaceAt(5, 5);
-    x.insertAt(6, 36);
-    x.print();
 
     return 0;
 } 
