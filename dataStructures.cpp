@@ -410,17 +410,23 @@ class linkedList{
             cout << "Can't swap..... elements are out of range" << endl;
         }
         else{
+            Node *prev1 = NULL;
             Node *ptr1 = head;
             for(int i = 0;i<FirstIndex;i++){
+                prev1 = ptr1;
                 ptr1 = ptr1->next;
             }
+            Node *prev2 = NULL;
             Node *ptr2 = head;
             for(int i = 0;i<SecondIndex;i++){
+                prev2 = ptr2;
                 ptr2 = ptr2->next;
             }
-            Node *tmpPtr = ptr1;
-            ptr1 = ptr2;
-            ptr2 = tmpPtr;
+            prev1->next = ptr2;
+            prev2->next = ptr1;
+            Node *ptrTmp = ptr1->next;
+            ptr1->next = ptr2->next;
+            ptr2->next = ptrTmp;
         }
     }
     void removeAt (int index){
@@ -662,6 +668,21 @@ class DoubleLinkedList{
             nptr->previous = ptr;
             delete deleted;
         }
+    }
+    void insertAfter(Node* Previous, T data){
+        if(isExist(Previous->data)){
+            Node *newNode = new Node;
+            newNode->data = data;
+            newNode->Next = Previous->Next;
+            Node *ptr = newNode->Next;
+            ptr->previous = newNode;
+            Previous->Next = newNode;
+            newNode->previous = Previous;
+        }
+        else{
+            cout << "The node does not exist" << endl;
+        }
+
     }
 };
 
@@ -980,6 +1001,14 @@ class Queue{
 };
 
 int main(){
-
+    linkedList<int> x;
+    x.insertAtTail(0);
+    x.insertAtTail(1);
+    x.insertAtTail(3);
+    x.insertAtTail(2);
+    x.insertAtTail(4);
+    x.insertAtTail(5);
+    x.swap(0, 5);
+    x.print();
     return 0;
 } 
