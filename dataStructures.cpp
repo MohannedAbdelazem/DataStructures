@@ -2,7 +2,7 @@
 using namespace std;
 
 template <typename T>
-class AMvector
+class ArrayBasedList
 {
 private:
     typedef T *iterator;
@@ -12,13 +12,23 @@ private:
     T *ptr;
 
 public:
+    bool isFull(){
+        return (capacity == size);
+    }
     int GetSize()
     {
         return size;
     }
+    int ListSize(){
+        return GetSize();
+    }
+
     int GetCapacity()
     {
         return capacity;
+    }
+    int MaxListSize(){
+        return GetCapacity();
     }
     iterator begin()
     {
@@ -29,7 +39,7 @@ public:
         return (ptr + size - 2);
     }
     // First constructor
-    AMvector(int n = 0)
+    ArrayBasedList(int n = 0)
     {
         size = 0;
         this->capacity = 10;
@@ -41,7 +51,7 @@ public:
         iteration = ptr;
     }
     // Second Constructor
-    AMvector(T *elements, int n)
+    ArrayBasedList(T *elements, int n)
     {
         size = n;
         capacity = n;
@@ -53,7 +63,7 @@ public:
         }
         iteration = ptr;
     }
-    AMvector(AMvector &VectorCpy)
+    ArrayBasedList(ArrayBasedList &VectorCpy)
     {
         size = VectorCpy.size;
         capacity = VectorCpy.capacity;
@@ -63,7 +73,7 @@ public:
             ptr[i] = VectorCpy[i];
         }
     }
-    AMvector &operator=(AMvector &VectorCpy)
+    ArrayBasedList &operator=(ArrayBasedList &VectorCpy)
     {
         size = VectorCpy.size;
         capacity = VectorCpy.capacity;
@@ -74,7 +84,7 @@ public:
         }
         return *this;
     }
-    AMvector &operator=(const AMvector &&VectorCpy)
+    ArrayBasedList &operator=(const ArrayBasedList &&VectorCpy)
     {
         size = VectorCpy.GetSize();
         capacity = VectorCpy.GetCapacity();
@@ -101,7 +111,7 @@ public:
         }
     }
 
-    int push_back(T element)
+    int insert(T element)
     {
         if (size == capacity)
         {
@@ -119,12 +129,44 @@ public:
         size++;
         return size;
     }
-    T pop_back()
+    int insertAt(T element, int index)
     {
-        size--;
-        return ptr[size];
+        if (size == capacity)
+        {
+            T *temp = new T[2 * capacity];
+            for (int i = 0; i < capacity; i++)
+            {
+                temp[i] = ptr[i];
+            }
+            delete[] ptr;
+            capacity *= 2;
+            ptr = temp;
+            iteration = ptr;
+        }
+        if(index > size){
+            cout << "Out of range" << endl;
+        }
+        else{
+            T tmpt = ptr[index];
+            ptr[index] = element;
+            for(int i = index+1;i<capacity;i++){
+                
+                T tmpt2 = ptr[i];
+                ptr[i] = tmpt;
+                tmpt = tmpt2;
+
+            }
+            
+            size++;
+            return size;
+        }
     }
-    void erase(T element)
+    // T pop_back()
+    // {
+    //     size--;
+    //     return ptr[size];
+    // }
+    void removeAt(T element)
     {
         size--;
         T *temp = new T[capacity];
@@ -140,14 +182,14 @@ public:
         iteration = ptr;
     }
     // deletes from the element after start to the element after the ending
-    void erase(T start, T ending)
-    {
-        while (start != ending + 1)
-        {
-            erase(start);
-            start++;
-        }
-    }
+    // void removeAt(T start, T ending)
+    // {
+    //     while (start != ending + 1)
+    //     {
+    //         removeAt(start);
+    //         start++;
+    //     }
+    // }
     void clear()
     {
         size = 0;
@@ -156,7 +198,7 @@ public:
         //     &(ptr[i]) = NULL;
         // }
     }
-    bool operator==(const AMvector<T> &other)
+    bool operator==(const ArrayBasedList<T> &other)
     {
         if (size != other.size)
         {
@@ -169,7 +211,11 @@ public:
         }
         return true;
     }
-    bool operator<(const AMvector<T> &other)
+    bool isItemEqual(T element, int index){
+        return (element == ptr[index]);
+
+    }
+    bool operator<(const ArrayBasedList<T> &other)
     {
         if (size != other.size)
         {
@@ -210,7 +256,7 @@ public:
         }
         return false;
     }
-    friend ostream &operator<<(ostream &out, AMvector<T> &vec)
+    friend ostream &operator<<(ostream &out, ArrayBasedList<T> &vec)
     {
         for (int i = 0; i < vec.GetSize(); i++)
         {
@@ -231,6 +277,19 @@ public:
     void operator+(int index)
     {
         iteration += index;
+    }
+    T retreiveAt(int index){
+        return ptr[index];
+    }
+    void replaceAt(T element1, int index){
+        ptr[index] = element1;
+
+    }
+    void print(){
+        for (int i = 0; i < size; i++)
+        {
+            cout << ptr[i] << " ";
+        }
     }
 };
 
