@@ -410,24 +410,74 @@ class linkedList{
             cout << "Can't swap..... elements are out of range" << endl;
         }
         else{
-            Node *prev1 = NULL;
-            Node *ptr1 = head;
-            for(int i = 0;i<FirstIndex;i++){
-                prev1 = ptr1;
-                ptr1 = ptr1->next;
+            if(FirstIndex == 0){
+                Node *ptr1 = head;
+                Node *ptr2 = head;
+                Node *prev2 = NULL;
+                for(int i = 0;i<SecondIndex;i++){
+                    prev2 = ptr2;
+                    ptr2 = ptr2->next;
+                }
+                prev2->next = ptr1;
+                Node *tmp = ptr1->next;
+                ptr1->next = ptr2->next;
+                ptr2->next = tmp;
+                head = ptr2;
             }
-            Node *prev2 = NULL;
-            Node *ptr2 = head;
-            for(int i = 0;i<SecondIndex;i++){
-                prev2 = ptr2;
-                ptr2 = ptr2->next;
+            else if(SecondIndex == 0){
+                Node *ptr1 = head;
+                Node *prev1 = NULL;
+                Node *ptr2 = head;
+                for(int i = 0;i<FirstIndex;i++){
+                    prev1 = ptr1;
+                    ptr1 = ptr1->next;
+                }
+                prev1->next = ptr2;
+                Node *tmp = ptr2->next;
+                ptr2->next = ptr1->next;
+                ptr1->next = tmp;
+                head = ptr1;
+
             }
-            prev1->next = ptr2;
-            prev2->next = ptr1;
-            Node *ptrTmp = ptr1->next;
-            ptr1->next = ptr2->next;
-            ptr2->next = ptrTmp;
+            else{
+                Node *prev1 = NULL;
+                Node *ptr1 = head;
+                for(int i = 0;i<FirstIndex;i++){
+                    prev1 = ptr1;
+                    ptr1 = ptr1->next;
+                }
+                Node *prev2 = NULL;
+                Node *ptr2 = head;
+                for(int i = 0;i<SecondIndex;i++){
+                    prev2 = ptr2;
+                    ptr2 = ptr2->next;
+                }
+                prev1->next = ptr2;
+                prev2->next = ptr1;
+                Node *ptrTmp = ptr1->next;
+                ptr1->next = ptr2->next;
+                ptr2->next = ptrTmp;
+            }
         }
+        // else{
+        //     Node *prev1 = NULL;
+        //     Node *ptr1 = head;
+        //     for(int i = 0;i<FirstIndex;i++){
+        //         prev1 = ptr1;
+        //         ptr1 = ptr1->next;
+        //     }
+        //     Node *prev2 = NULL;
+        //     Node *ptr2 = head;
+        //     for(int i = 0;i<SecondIndex;i++){
+        //         prev2 = ptr2;
+        //         ptr2 = ptr2->next;
+        //     }
+        //     prev1->next = ptr2;
+        //     prev2->next = ptr1;
+        //     Node *ptrTmp = ptr1->next;
+        //     ptr1->next = ptr2->next;
+        //     ptr2->next = ptrTmp;
+        // }
     }
     void removeAt (int index){
         if(isEmpty()){
@@ -610,17 +660,80 @@ class DoubleLinkedList{
             cout << "Can't swap..... elements are out of range" << endl;
         }
         else{
-            Node *ptr1 = head;
-            for(int i = 0;i<FirstIndex;i++){
-                ptr1 = ptr1->Next;
+            if(FirstIndex == 0){
+                Node *ptr1 = head;
+                Node *ptr2 = head;
+                Node *prev2 = NULL;
+                for(int i = 0;i<SecondIndex;i++){
+                    prev2 = ptr2;
+                    ptr2 = ptr2->Next;
+                }
+                Node *ptTemp = ptr1->Next;
+                prev2->Next = ptr1;
+                Node *tmp = ptr1->Next;
+                ptr1->Next = ptr2->Next;
+                ptr2->Next = tmp;
+                head = ptr2;
+
+
+                ptTemp->previous = head;
+                ptr1->previous = ptr2->previous;
+                ptr2->previous = NULL;
+                if(SecondIndex == count()-1){
+                    tail = ptr1;
+                }
             }
-            Node *ptr2 = head;
-            for(int i = 0;i<SecondIndex;i++){
-                ptr2 = ptr2->Next;
+            else if(SecondIndex == 0){
+                Node *ptr1 = head;
+                Node *prev1 = NULL;
+                Node *ptr2 = head;
+                for(int i = 0;i<FirstIndex;i++){
+                    prev1 = ptr1;
+                    ptr1 = ptr1->Next;
+                }
+                Node *ptTemp = ptr2->Next;
+                prev1->Next = ptr2;
+                Node *tmp = ptr2->Next;
+                ptr2->Next = ptr1->Next;
+                ptr1->Next = tmp;
+                head = ptr1;
+
+
+                ptTemp->previous = head;
+                ptr2->previous = ptr1->previous;
+                ptr1->previous = NULL;
+                if(FirstIndex == count()-1){
+                    tail = ptr2;
+                }
+
             }
-            Node *tmpPtr = ptr1;
-            ptr1 = ptr2;
-            ptr2 = tmpPtr;
+            else{
+                Node *prev1 = NULL;
+                Node *ptr1 = head;
+                for(int i = 0;i<FirstIndex;i++){
+                    prev1 = ptr1;
+                    ptr1 = ptr1->Next;
+                }
+                Node *prev2 = NULL;
+                Node *ptr2 = head;
+                for(int i = 0;i<SecondIndex;i++){
+                    prev2 = ptr2;
+                    ptr2 = ptr2->Next;
+                }
+                Node *ptr1Next = ptr1->Next;
+                Node *ptr2Next = ptr2->Next;
+                ptr1Next->previous = ptr2;
+                ptr2Next->previous = ptr1;
+                Node *prevTmp = ptr1->previous;
+                ptr1->previous = ptr2->previous;
+                ptr2->previous = prevTmp;
+
+                prev1->Next = ptr2;
+                prev2->Next = ptr1;
+                Node *ptrTmp = ptr1->Next;
+                ptr1->Next = ptr2->Next;
+                ptr2->Next = ptrTmp;
+            }
         }
     }
     void removeAtHead(){
@@ -877,18 +990,55 @@ class CircularLinkedList{
             cout << "Can't swap..... elements are out of range" << endl;
         }
         else{
-            Node *ptr1 = head;
-            for(int i = 0;i<FirstIndex;i++){
-                ptr1 = ptr1->Next;
+            if(FirstIndex == 0){
+                Node *ptr1 = head;
+                Node *ptr2 = head;
+                Node *prev2 = NULL;
+                for(int i = 0;i<SecondIndex;i++){
+                    prev2 = ptr2;
+                    ptr2 = ptr2->Next;
+                }
+                prev2->Next = ptr1;
+                Node *tmp = ptr1->Next;
+                ptr1->Next = ptr2->Next;
+                ptr2->Next = tmp;
+                head = ptr2;
             }
-            Node *ptr2 = head;
-            for(int i = 0;i<SecondIndex;i++){
-                ptr2 = ptr2->Next;
+            else if(SecondIndex == 0){
+                Node *ptr1 = head;
+                Node *prev1 = NULL;
+                Node *ptr2 = head;
+                for(int i = 0;i<FirstIndex;i++){
+                    prev1 = ptr1;
+                    ptr1 = ptr1->Next;
+                }
+                prev1->Next = ptr2;
+                Node *tmp = ptr2->Next;
+                ptr2->Next = ptr1->Next;
+                ptr1->Next = tmp;
+                head = ptr1;
+
             }
-            Node *tmpPtr = ptr1;
-            ptr1 = ptr2;
-            ptr2 = tmpPtr;
+            else{
+                Node *prev1 = NULL;
+                Node *ptr1 = head;
+                for(int i = 0;i<FirstIndex;i++){
+                    prev1 = ptr1;
+                    ptr1 = ptr1->Next;
+                }
+                Node *prev2 = NULL;
+                Node *ptr2 = head;
+                for(int i = 0;i<SecondIndex;i++){
+                    prev2 = ptr2;
+                    ptr2 = ptr2->Next;
+                }
+                prev1->Next = ptr2;
+                prev2->Next = ptr1;
+                Node *ptrTmp = ptr1->Next;
+                ptr1->Next = ptr2->Next;
+                ptr2->Next = ptrTmp;
         }
+    }
     }
     void clear(){
         head = NULL;
@@ -1001,14 +1151,53 @@ class Queue{
 };
 
 int main(){
-    linkedList<int> x;
-    x.insertAtTail(0);
-    x.insertAtTail(1);
-    x.insertAtTail(3);
-    x.insertAtTail(2);
-    x.insertAtTail(4);
-    x.insertAtTail(5);
-    x.swap(0, 5);
+    // linkedList<int> x;
+    // x.insertAtTail(5);
+    // x.insertAtTail(1);
+    // x.insertAtTail(4);
+    // x.insertAtTail(2);
+    // x.insertAtTail(3);
+    // x.insertAtTail(0);
+    // x.print();
+    // cout << endl;
+    // x.swap(5, 0);
+    // x.print();
+    // x.swap(2, 3);
+    // cout << endl;
+    // x.print();
+    // x.swap(3, 4);
+    // cout << endl;
+    // x.print();
+    // x.swap(2, 5);
+    // cout << endl;
+    // x.print();
+    // DoubleLinkedList<int> x;
+    // x.insertAtTail(0);
+    // x.insertAtTail(1);
+    // x.insertAtTail(4);
+    // x.insertAtTail(3);
+    // x.insertAtTail(2);
+    // x.insertAtTail(5);
+    // cout << endl;
+    // x.swap(2, 4);
+    // x.insertAtTail(6);
+    // x.insertAtHead(-1);
+    // x.forwardTraversal();
+    // cout << endl;
+    // x.backwardTraversal();
+    CircularLinkedList<int> x;
+    x.insertAtEnd(0);
+    x.insertAtEnd(1);
+    x.insertAtEnd(2);
+    x.insertAtEnd(3);
+    x.insertAtEnd(4);
+    x.insertAtEnd(5);
+    x.swap(3, 4);
+
     x.print();
+
+
+
+    
     return 0;
 } 
