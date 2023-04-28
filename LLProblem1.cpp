@@ -21,7 +21,7 @@ linkedList<int> CombineNodes(linkedList<int> list)
     }
 
     return result;
-
+}
 
 int main()
 {
